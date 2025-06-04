@@ -1,15 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { Comment } from './schemas/comments.schem';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class CommentsService {
+   constructor(@InjectModel(Comment.name) private commentModel: Model<Comment>) {}
+
+
   create(createCommentDto: CreateCommentDto) {
-    return 'This action adds a new comment';
+    const addComment = this.commentModel.create({
+      text:createCommentDto.text,
+      parent:createCommentDto.parentId || null,
+      user:createCommentDto.userId
+    })
+    return addComment
   }
 
   findAll() {
-    return `This action returns all comments`;
+    return this.commentModel.find();
   }
 
   findOne(id: number) {
