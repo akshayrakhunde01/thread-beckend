@@ -20,7 +20,11 @@ export class CommentsService {
   }
 
   findAll() {
-    return this.commentModel.find();
+    return this.commentModel.find({ parent: null }).populate(['user', 'parent']).exec();
+  }
+
+  findNestedComment(parentId:string) {
+    return this.commentModel.find({ parent: parentId }).populate(['user', 'parent']).exec();
   }
 
   findOne(id: number) {
